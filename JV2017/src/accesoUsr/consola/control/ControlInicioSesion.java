@@ -42,7 +42,7 @@ public class ControlInicioSesion {
 			e.printStackTrace();
 		}
 		vistaSesion = new VistaInicioSesion();
-		vistaSesion.mostrarMensaje(Configuracion.get().getProperty("aplicación.titulo"));
+		vistaSesion.mostrarMensaje(Configuracion.get().getProperty("aplicacion.titulo"));
 		iniciarSesionUsuario(idUsr);
 	}
 
