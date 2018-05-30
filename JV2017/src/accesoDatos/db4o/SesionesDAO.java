@@ -14,6 +14,7 @@ public class SesionesDAO implements OperacionesDAO {
 	// Metodo de almacenamiento
 	private static ObjectContainer db;
 	
+
 	/** Grupo 3 - Marcos Martínez 
 	 * Constructor por defecto de uso interno.
 	 * Sólo se ejecutará una vez
