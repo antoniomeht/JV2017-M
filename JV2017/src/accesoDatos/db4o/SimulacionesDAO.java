@@ -195,12 +195,15 @@ public class SimulacionesDAO implements OperacionesDAO{
 		}
 		
 		/**
-		 * Obtiene todos las simulaciones almacenadas.
-		 * @return - la List con todas las simulaciones.
-		 * @author GRUPO 1 DAM
-		 */
-		public List <Simulacion> obtenerTodasSimulacion() {
-			return null;
-		}
+         * Obtiene todos las simulaciones almacenadas.
+         * @return - la List con todas las simulaciones.
+         * @author GRUPO 1 DAM
+         */
+        public List <Simulacion> obtenerTodasSimulacion() {
+            Query consulta = db.query();
+            consulta.constrain(Simulacion.class);
+            return consulta.execute();
+        }
+
 
 }		
