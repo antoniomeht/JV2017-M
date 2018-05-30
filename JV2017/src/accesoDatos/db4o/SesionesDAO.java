@@ -14,6 +14,36 @@ public class SesionesDAO implements OperacionesDAO {
 	// Metodo de almacenamiento
 	private static ObjectContainer db;
 	
+	/** Grupo 3 - Marcos Martínez 
+	 * Constructor por defecto de uso interno.
+	 * Sólo se ejecutará una vez.
+	 */
+	
+	private SesionesDAO() {
+		db= Conexion.getDB();
+		try {
+			obtener("Demo0");
+		}
+		catch (DatosException e) {
+		//cargarPredeterminados(); Falta ejecutar 
+		}
+	}
+
+	/** Grupo 3 - Marcos Martínez
+	 *  Método estático de acceso a la instancia única.
+	 *  Si no existe la crea invocando al constructor interno.
+	 *  Utiliza inicialización diferida.
+	 *  Sólo se crea una vez; instancia única -patrón singleton-
+	 *  @return instancia
+	 */
+	
+	public static SesionesDAO getInstancia() {
+		if (instancia == null) {
+			instancia = new SesionesDAO();
+		}
+		return instancia;
+	}
+	
 	/**
 	 *  Grupo 3 -- Juan Jesús Nicolás Agustín
 	 */
