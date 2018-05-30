@@ -187,11 +187,14 @@ public class SimulacionesDAO implements OperacionesDAO{
             cargarPredeterminados();
         }
 
-
+		/**
+		 * Metodo para cerrar la conexion con la base de datos
+		 * @author DAM GRUPO 1 - Francisco Jurado Abad
+		 */
 		@Override
 		public void cerrar() {
-			// TODO Auto-generated method stub
-			
+			// No es necesaria
+			db.close();
 		}
 		
 		/**
