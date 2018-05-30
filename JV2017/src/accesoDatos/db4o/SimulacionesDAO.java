@@ -97,12 +97,19 @@ public class SimulacionesDAO implements OperacionesDAO{
 		}
 
 
+		/** 
+         * Búsqueda de simulacion dado un objeto, reenvía al método que utiliza idSimulacion.
+         * @param obj - la Simulacion a buscar.
+         * @return - la Simulacion encontrada.
+         * @throws DatosException - si no existe.
+         * @author GRUPO 1 - Víctor Martínez Martínez
+         */
 
 		@Override
 		public Object obtener(Object obj) throws DatosException {
-			// TODO Auto-generated method stub
-			return null;
+			return this.obtener(((Object) obj).getIdSimulacion());
 		}
+
 
 		/**
          *  Recibe un argumento que representa la nueva simulación
