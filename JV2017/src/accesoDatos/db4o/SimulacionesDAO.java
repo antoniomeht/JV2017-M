@@ -197,7 +197,7 @@ public class SimulacionesDAO implements OperacionesDAO{
 		/**
          * Obtiene todos las simulaciones almacenadas.
          * @return - la List con todas las simulaciones.
-         * @author GRUPO 1 DAM
+         * @author GRUPO 1 DAM - Juan Carlos Peña Fernández
          */
         public List <Simulacion> obtenerTodasSimulacion() {
             Query consulta = db.query();
