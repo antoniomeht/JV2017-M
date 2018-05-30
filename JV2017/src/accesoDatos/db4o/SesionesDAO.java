@@ -16,7 +16,7 @@ public class SesionesDAO implements OperacionesDAO {
 	
 	/** Grupo 3 - Marcos Martínez 
 	 * Constructor por defecto de uso interno.
-	 * Sólo se ejecutará una vez.
+	 * Sólo se ejecutará una vez
 	 */
 	
 	private SesionesDAO() {
