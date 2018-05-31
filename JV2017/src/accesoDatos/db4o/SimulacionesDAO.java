@@ -106,8 +106,8 @@ public class SimulacionesDAO implements OperacionesDAO{
          */
 
 		@Override
-		public Object obtener(Object obj) throws DatosException {
-			return this.obtener(((Object) obj).getIdSimulacion());
+		public Simulacion obtener(Object obj) throws DatosException {
+			return this.obtener(((Simulacion) obj).getIdSimulacion());
 		}
 
 
