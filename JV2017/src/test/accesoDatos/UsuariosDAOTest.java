@@ -3,9 +3,9 @@
  * Prueba Junit4 de la clase SimulacionesDAO.
  * @since: prototipo 2.1
  * @source: UsuariosDAOTest.java 
- * @version: 2.1 - 2018.05.30
- * @author: DAM GRUPO 2 Antonio Araez Moreno
- * 						Carlos Carrion Martinez 						
+ * @version: 2.1 - 2018.05.31
+ * @author: DAM GRUPO 2 Antonio Araez Moreno, Carlos Carrion Martinez, 
+ * Alvaro Martinez Martinez		
  */
 package test.accesoDatos;
 
@@ -95,7 +95,8 @@ public class UsuariosDAOTest {
 	@Test
 	public void testObtenerUsuario() {
 		try {
-			fachada.obtenerUsuario(usuarioPrueba);
+			//Cambio a alta
+			fachada.altaUsuario(usuarioPrueba);
 			assertSame(usuarioPrueba, fachada.obtenerUsuario(usuarioPrueba));
 		}
 		catch (DatosException e) {
@@ -113,19 +114,20 @@ public class UsuariosDAOTest {
 		fail("No implenetado");
 	}
 	
-	@Test
-	public void testObtenerMapaEquivalencias() {
-		fail("No implementado");
-	}
-	
-	@Test
-	public void cambiarEquivalenciaId() {
-		fail("No implementado");
-	}
+	/**
+	 * Metodos Test
+	 * @author GRUPO 2 DAM Antonio Araez Moreno
+	 */
 	
 	@Test
 	public void testAltaUsuario() {
-		fail("No implenetado");
+		try {
+			fachada.altaUsuario(usuarioPrueba);
+			assertSame (usuarioPrueba, fachada.obtenerUsuario(usuarioPrueba) );
+		}
+		catch (DatosException e) {
+			
+		}
 	}
 
 	@Test
