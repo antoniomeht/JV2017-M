@@ -8,7 +8,7 @@
  *  @author: ajp
  */
 
-package accesoUsr.consola;
+package accesoUsr.consola.vista;
 
 import java.io.Console;
 import java.util.Scanner;

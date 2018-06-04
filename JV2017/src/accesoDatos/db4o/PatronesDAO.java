@@ -135,10 +135,26 @@ public class PatronesDAO implements OperacionesDAO {
 		
 	}
 
+	/**
+	 * Elimina el objeto, dado el id utilizado para el almacenamiento.
+	 * @param nombre - el nombre del Patron a eliminar.
+	 * @return - el Patron eliminado. 
+	 * @throws DatosException - si no existe.
+	 */
 	@Override
-	public Object baja(String id) throws DatosException {
-		// TODO Auto-generated method stub
-		return null;
+	public Patron baja(String nombreP) throws DatosException  {
+		assert nombreP != null;
+		assert nombreP != "";
+		assert nombreP != " ";
+		Patron patron = null;
+		try {
+			obtener(nombreP);
+			db.delete(patron);
+			return patron;
+		}
+		catch (DatosException e) {
+			throw new DatosException("Baja: "+ nombreP + " no existe");
+		}	
 	}
 
 	/**
@@ -165,12 +181,42 @@ public class PatronesDAO implements OperacionesDAO {
 		
 	}
 	
+	/**
+	 * Obtiene el listado de todos los objetos Patron almacenados.
+	 * @return el texto con los datos.
+	 */
 	@Override
 	public String listarDatos() {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder listado = new StringBuilder();
+		ObjectSet<Patron> result;
+		Query consulta = db.query();
+		consulta.constrain(Patron.class);
+		result = consulta.execute();
+		for(Patron patron:result) {
+			listado.append("\n" + patron);
+			
+		}
+		return listado.toString();
 	}
 
+	/**
+	 * Obtiene todos los Identificadores de los patrones almacenados.
+	 * @return El texto con los datos.
+	 */
+	public String listarId() {
+		StringBuilder listado = new StringBuilder();
+		ObjectSet<Patron> result;
+		Query consulta = db.query();
+		consulta.constrain(Patron.class);
+		result = consulta.execute();
+		for(Patron patron:result) {
+			if(patron != null) {
+				listado.append(patron.getNombre() + "\n");
+			}
+		}
+		return listado.toString();
+	}
+	
 	@Override
 	public void borrarTodo() {
 		// TODO Auto-generated method stub

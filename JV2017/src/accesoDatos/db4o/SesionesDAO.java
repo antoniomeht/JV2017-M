@@ -74,32 +74,81 @@ public class SesionesDAO implements OperacionesDAO {
 	
 	
 	/**
-	 * Búsqueda de Sesion dado un objeto, reenvía al método que utiliza idSesion.
-	 * @param obj - la SesionUsuario a buscar.
-	 * @return - la Sesion encontrada.
-	 * @throws DatosException - si no existe
+	 * Alta de una nueva SesionUsuario en orden y sin repeticiones según IdUsr + fecha. 
+	 * Busca previamente la posición que le corresponde por búsqueda binaria.
+	 * @param obj - la SesionUsuario a almacenar.
+	 * @throws DatosException - si ya existe.
 	 * @author Grupo 3 - Marcos Martínez Martínez
 	 */
 	@Override
 	public Object obtener(Object obj) throws DatosException {
 		return this.obtener(((SesionUsuario) obj).getIdSesion());
 	}
-
+	
+	/**
+	 * Alta de una nueva SesionUsuario en orden y sin repeticiones según IdUsr + fecha. 
+	 * Busca previamente la posición que le corresponde por búsqueda binaria.
+	 * @param obj - la SesionUsuario a almacenar.
+	 * @throws DatosException - si ya existe.
+	 * @author Grupo 3 - Marcos Martínez
+	 */
 	@Override
 	public void alta(Object obj) throws DatosException {
-		// TODO Auto-generated method stub
+		SesionUsuario sesionNueva = (SesionUsuario) obj;
+        SesionUsuario sesionPrevia = null;
+        
+        try {
+            sesionPrevia = (SesionUsuario) obtener(sesionNueva.getIdSesion());
+        } catch (DatosException e) {
+            db.store(sesionNueva);
+            return;
+        }
+        
+        throw new DatosException("Simulacion: " + sesionPrevia + "ya existente");
 		
 	}
-
+	
+	/**
+	 * Elimina el objeto, dado el id utilizado para el almacenamiento.
+	 * @param idSesion - identificador de la SesionUsuario a eliminar.
+	 * @return - la SesionUsuario eliminada.
+	 * @throws DatosException - si no existe.
+	 * @author Grupo 3 - Marcos Martínez
+	 */
 	@Override
-	public Object baja(String id) throws DatosException {
-		// TODO Auto-generated method stub
-		return null;
+	public Object baja(String idSesion) throws DatosException {
+		assert idSesion != null;
+		
+		try {
+			SesionUsuario sesionActual = (SesionUsuario) obtener(idSesion);
+			db.delete(sesionActual);
+			return sesionActual;
+		}
+		catch (DatosException e) {
+			throw new DatosException("Simulacion: " + idSesion + "no existe, o no se puede borrar");
+		}
 	}
 
+	/**
+	 *  Actualiza datos de una SesionUsuario reemplazando el almacenado por el recibido.
+	 *	@param obj - SesionUsuario con las modificaciones.
+	 * @throws DatosException - si no existe.
+	 * @author Grupo3 - Juan Jesus Nicolas Agustin
+	 */
 	@Override
 	public void actualizar(Object obj) throws DatosException {
-		// TODO Auto-generated method stub
+		SesionUsuario sesionActualizada = (SesionUsuario) obj;
+		SesionUsuario sesionPrevia = null;
+		
+		try {
+			sesionPrevia = (SesionUsuario) obtener(sesionActualizada.getIdSesion());
+			sesionPrevia.setUsr(sesionActualizada.getUsr());
+			sesionPrevia.setFecha(sesionActualizada.getFecha());
+			sesionPrevia.setEstado(sesionActualizada.getEstado());
+			db.store(sesionPrevia);
+		} catch (DatosException e) {
+			throw new DatosException("Actualizar: " + sesionActualizada.getIdSesion() + "no existe");
+		}
 		
 	}
 	/**
@@ -127,11 +176,11 @@ public class SesionesDAO implements OperacionesDAO {
 	@Override
     public void borrarTodo() {
         // Elimina cada uno de los obtenidos
-        
+		for (SesionUsuario sim: obtenerTodasSesiones()) {
+            db.delete(sim);
+        }
      	}
         
-    
-	
 	/**
 	 *  Cierra almacenes de datos.
 	 */
