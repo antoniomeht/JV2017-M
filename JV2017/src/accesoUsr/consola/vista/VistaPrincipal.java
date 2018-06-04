@@ -7,7 +7,7 @@
  *  @author: ajp
  */
 
-package accesoUsr.consola;
+package accesoUsr.consola.vista;
 
 import java.io.Console;
 import java.util.Scanner;
@@ -27,9 +27,9 @@ public class VistaPrincipal implements OperacionesVista {
 	}
 
 	public void mostrar() {
-		this.mostrarMensaje("\n--" 
-	+ Configuracion.get().getProperty("aplicacion.titulo")
-	+ " GESTIÓN PRINCIPAL --");
+		this.mostrarMensaje("\n-- " 
+										+ Configuracion.get().getProperty("aplicacion.titulo")
+										+ " GESTIÓN PRINCIPAL --");
 		this.mostrarMensaje(
 				"  \nSIMULACIONES\n" +
 						"    1. Crear nueva simulación\n" +
@@ -37,7 +37,7 @@ public class VistaPrincipal implements OperacionesVista {
 						"    3. Eliminar simulación exitente\n" +
 						"    4. Mostrar datos de simulaciones\n" +
 						"    5. Mostrar identificadores de simulaciones\n" +
-						"    6. Ejecutar simulación de demoostración\n" +
+						"    6. Ejecutar simulación de demostración\n" +
 						"  \nMUNDOS\n" +
 						"    7. Crear nuevo mundo\n" +
 						"    8. Modificar mundo existente\n" +

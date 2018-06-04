@@ -10,10 +10,12 @@
 package accesoUsr.consola.control;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import accesoDatos.Datos;
 import accesoDatos.DatosException;
-import accesoUsr.consola.VistaPrincipal;
+import accesoDatos.fichero.SimulacionesDAO;
+import accesoUsr.consola.vista.VistaPrincipal;
 import modelo.ModeloException;
 import modelo.SesionUsuario;
 import modelo.Simulacion;
@@ -50,15 +52,15 @@ public class ControlPrincipal {
 			vistaPrincipal.pedirOpcion();
 			procesarOpcion();	
 		} while (true);
-		
+
 	}
 
 	private void procesarOpcion() {
 		switch (vistaPrincipal.getOpcionActiva()) {
 		case 0:
 			salir();
-		
-		// Simulaciones
+
+			// Simulaciones
 		case 1:
 			crearNuevaSimulacion();
 			break;
@@ -77,8 +79,8 @@ public class ControlPrincipal {
 		case 6:
 			ejecutarDemoSimulacion();
 			break;
-		
-		// Simulaciones
+
+			// Mundos
 		case 7:
 			crearNuevoMundo();
 			break;
@@ -91,8 +93,8 @@ public class ControlPrincipal {
 		case 10:
 			mostrarMundos();
 			break;
-		
-		// Usuarios
+
+			// Usuarios
 		case 11:
 			crearNuevoUsuario();
 			break;
@@ -105,8 +107,8 @@ public class ControlPrincipal {
 		case 14:
 			mostrarUsuarios();
 			break;
-		
-		// Sesiones
+
+			// Sesiones
 		case 15:
 			modificarSesion();
 			break;
@@ -130,106 +132,103 @@ public class ControlPrincipal {
 		vistaPrincipal.mostrarMensaje("\nFin de programa...");	
 		System.exit(1); 
 	}	
-	
+
 	// Simulaciones
 	private void crearNuevaSimulacion() {
 		vistaPrincipal.mostrarMensaje("Opción no disponible...");
-		
+
 	}
-	
+
 	private void modificarSimulacion() {
 		vistaPrincipal.mostrarMensaje("Opción no disponible...");
-		
+
 	}
-	
+
 	private void eliminarSimulacion() {
 		vistaPrincipal.mostrarMensaje("Opción no disponible...");
-		
+
 	}
-	
+
 	private void mostrarSimulaciones() {
 		vistaPrincipal.mostrarMensaje("Opción no disponible...");
-		
+
 	}
-	
+
 	private void mostrarIdSimulaciones() {
 		vistaPrincipal.mostrarMensaje("Opción no disponible...");
-		
+
 	}
 
 	private void ejecutarDemoSimulacion() {
-		ArrayList<Simulacion> simulacionesUsrActivo = null;
 		try {
-			simulacionesUsrActivo = new ArrayList<Simulacion>(fachada.obtenerSimulacionesUsuario("III1R"));
+			new ControlSimulacion(fachada.obtenerSimulacion("III1R:20050505000000"));		
 		} 
-		catch (ModeloException | DatosException e) {
+		catch (DatosException e) {
 			e.printStackTrace();
 		}
-		// La simulación predeterminada-demo es la primera del usuario predeterminado Invitado
-		new ControlSimulacion(simulacionesUsrActivo.get(0));		
 	}
-	
+
 	// Mundos
 	private void crearNuevoMundo() {
 		vistaPrincipal.mostrarMensaje("Opción no disponible...");
-		
+
 	}
 
 	private void modificarMundo() {
 		vistaPrincipal.mostrarMensaje("Opción no disponible...");
-		
+
 	}
-	
+
 	private void eliminarMundo() {
 		vistaPrincipal.mostrarMensaje("Opción no disponible...");
-		
+
 	}
-	
+
 	private void mostrarMundos() {
 		vistaPrincipal.mostrarMensaje("Opción no disponible...");
-		
+
 	}
-	
+
 	// Usuarios	
 	private void crearNuevoUsuario() {
 		vistaPrincipal.mostrarMensaje("Opción no disponible...");
-		
+
 	}
-	
+
 	private void modificarUsuario() {
 		vistaPrincipal.mostrarMensaje("Opción no disponible...");
-		
+
 	}
-	
+
 	private void eliminarUsuario() {
 		vistaPrincipal.mostrarMensaje("Opción no disponible...");
-		
+
 	}
-	
+
 	private void mostrarUsuarios() {
 		vistaPrincipal.mostrarMensaje("Opción no disponible...");
-		
+
 	}
-	
+
 	// Sesiones	
 	private void modificarSesion() {
 		vistaPrincipal.mostrarMensaje("Opción no disponible...");
-		
+
 	}
-	
+
 	private void eliminarSesion() {
 		vistaPrincipal.mostrarMensaje("Opción no disponible...");
-		
+
 	}
-	
+
 	private void mostrarSesiones() {
 		vistaPrincipal.mostrarMensaje("Opción no disponible...");
-		
+
 	}
-	
+
 	private void mostrarIdSesiones() {
 		vistaPrincipal.mostrarMensaje("Opción no disponible...");
-		
+
 	}
 
 } // class
