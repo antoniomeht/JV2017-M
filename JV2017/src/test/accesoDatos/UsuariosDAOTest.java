@@ -165,7 +165,7 @@ public class UsuariosDAOTest {
 
 	@Test
 	public void testToStringDatosUsuarios() {
-		fail("No implenetado");
+		assertNotNull(fachada.toStringDatosUsuarios());
 	}
 
 	
