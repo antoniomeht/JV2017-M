@@ -113,9 +113,25 @@ public class PatronesDAO implements OperacionesDAO {
 		return this.obtener(((Patron) obj).getNombre());
 	}
 
+	/**
+	 *  Alta de un nuevo Patron en orden y sin repeticiones según el campo nombre. 
+	 *  Busca previamente la posición que le corresponde por búsqueda binaria.
+	 * @param obj - Patron a almacenar.
+	 * @throws DatosException - si ya existe.
+	 */
 	@Override
-	public void alta(Object obj) throws DatosException {
-		// TODO Auto-generated method stub
+	public void alta(Object obj) throws DatosException  {
+		assert obj != null;
+		Patron patron = (Patron) obj;	
+		
+		try {
+			obtener(patron.getNombre());
+		}
+		catch  (DatosException e) {
+			db.store(patron);
+			return;
+		}
+			throw new DatosException("Alta: "+ patron.getNombre() + " ya existe");
 		
 	}
 
