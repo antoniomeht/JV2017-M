@@ -135,10 +135,26 @@ public class PatronesDAO implements OperacionesDAO {
 		
 	}
 
+	/**
+	 * Elimina el objeto, dado el id utilizado para el almacenamiento.
+	 * @param nombre - el nombre del Patron a eliminar.
+	 * @return - el Patron eliminado. 
+	 * @throws DatosException - si no existe.
+	 */
 	@Override
-	public Object baja(String id) throws DatosException {
-		// TODO Auto-generated method stub
-		return null;
+	public Patron baja(String nombreP) throws DatosException  {
+		assert nombreP != null;
+		assert nombreP != "";
+		assert nombreP != " ";
+		Patron patron = null;
+		try {
+			obtener(nombreP);
+			db.delete(patron);
+			return patron;
+		}
+		catch (DatosException e) {
+			throw new DatosException("Baja: "+ nombreP + " no existe");
+		}	
 	}
 
 	/**
