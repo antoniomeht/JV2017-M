@@ -125,12 +125,30 @@ public class PatronesDAO implements OperacionesDAO {
 		return null;
 	}
 
+	/**
+	 *  Actualiza datos de un Mundo reemplazando el almacenado por el recibido.
+	 *	@param obj - Patron con las modificaciones.
+	 *  @throws DatosException - si no existe.
+	 */
 	@Override
-	public void actualizar(Object obj) throws DatosException {
-		// TODO Auto-generated method stub
+	public void actualizar(Object obj) throws DatosException  {
+		assert obj != null;
+		Patron patronActualizado = (Patron) obj;
+		Patron patronAux = null;
+		try {
+			patronAux = obtener(patronActualizado.getNombre());
+			patronAux.setNombre(patronActualizado.getNombre());
+			patronAux.setEsquema(patronActualizado.getEsquema());
+			db.store(patronAux);
+			
+		}
+		catch(DatosException e) {
+			throw new DatosException("Actualizar: "+ patronActualizado.getNombre() + " no existe");
+			
+		}
 		
 	}
-
+	
 	@Override
 	public String listarDatos() {
 		// TODO Auto-generated method stub
