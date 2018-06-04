@@ -165,10 +165,22 @@ public class PatronesDAO implements OperacionesDAO {
 		
 	}
 	
+	/**
+	 * Obtiene el listado de todos los objetos Patron almacenados.
+	 * @return el texto con los datos.
+	 */
 	@Override
 	public String listarDatos() {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder listado = new StringBuilder();
+		ObjectSet<Patron> result;
+		Query consulta = db.query();
+		consulta.constrain(Patron.class);
+		result = consulta.execute();
+		for(Patron patron:result) {
+			listado.append("\n" + patron);
+			
+		}
+		return listado.toString();
 	}
 
 	@Override
