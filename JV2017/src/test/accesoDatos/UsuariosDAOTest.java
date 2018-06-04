@@ -132,7 +132,12 @@ public class UsuariosDAOTest {
 
 	@Test
 	public void testBajaUsuario() {
-		fail("No implenetado");
+		try {
+			fachada.bajaUsuario(usuarioPrueba.getIdUsr());
+			assertSame(usuarioPrueba.getIdUsr(), fachada.bajaUsuario(usuarioPrueba.getIdUsr()));
+		}
+		catch(DatosException e){
+		}
 	}
 
 	@Test
