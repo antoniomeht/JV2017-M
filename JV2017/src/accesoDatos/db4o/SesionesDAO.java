@@ -102,9 +102,17 @@ public class SesionesDAO implements OperacionesDAO {
 	}
 
 	@Override
-	public Object baja(String id) throws DatosException {
-		// TODO Auto-generated method stub
-		return null;
+	public Object baja(String idSesion) throws DatosException {
+		assert idSesion != null;
+		
+		try {
+			SesionUsuario sesionActual = (SesionUsuario) obtener(idSesion);
+			db.delete(sesionActual);
+			return sesionActual;
+		}
+		catch (DatosException e) {
+			throw new DatosException("Simulacion: " + idSesion + "no existe, o no se puede borrar");
+		}
 	}
 
 	/**
