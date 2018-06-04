@@ -14,6 +14,7 @@
 package accesoDatos.db4o;
 
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 import com.db4o.ObjectContainer;
@@ -73,8 +74,6 @@ public class UsuariosDAO implements OperacionesDAO {
 	 * Método para generar datos predeterminados
 	 */
 	private void cargarPredeterminados() {
-
-		// Usuario usrPredeterminado = null;
 		try {
 			String nombreUsr = Configuracion.get().getProperty("usuario.admin");
 			String password = "Miau#0";
@@ -92,11 +91,9 @@ public class UsuariosDAO implements OperacionesDAO {
 	/**
 	 * Búsqueda de usuario dado su idUsr, el correo o su nif.
 	 * 
-	 * @param id
-	 *            - el id de Usuario a buscar.
+	 * @param id - el id de Usuario a buscar.
 	 * @return el Usuario encontrado.
-	 * @throws DatosException
-	 *             si no existe.
+	 * @throws DatosException - si no existe.
 	 */
 	@Override
 	public Usuario obtener(String id) throws DatosException {
@@ -136,46 +133,220 @@ public class UsuariosDAO implements OperacionesDAO {
 		return result.get(0);
 	}
 
+	/**
+	 * Búsqueda de Usuario dado un objeto, reenvía al método que utiliza idUsr.
+	 * @param obj - el Usuario a buscar.
+	 * @return - el Usuario encontrado.
+	 * @throws DatosException - si no existe.
+	 */
 	@Override
 	public Object obtener(Object obj) throws DatosException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.obtener(((Usuario) obj).getIdUsr());
 	}
 
+	/**
+	 *  Alta de un nuevo usuario en orden y sin repeticiones según el campo idUsr. 
+	 *  Localiza previamente la posición de inserción, en orden, que le corresponde.
+	 *	@param obj - Objeto a almacenar.
+	 *  @throws DatosException si ya existe o no puede generar variante de idUsr.
+	 */
 	@Override
 	public void alta(Object obj) throws DatosException {
-		// TODO Auto-generated method stub
-
+		assert obj!= null;
+		Usuario usrNuevo = (Usuario) obj;							// Para conversión cast
+		Usuario usrPrevio = null;
+		try {
+			usrPrevio = obtener(usrNuevo.getIdUsr());  //comprobar si existe
+		}
+		catch (DatosException e) {
+			db.store(usrNuevo);		//store guarda objetos repetidos
+			registrarEquivalenciaId(usrNuevo);
+			return;
+		}
+		try {
+			generarVarianteIdUsr(usrNuevo, usrPrevio);
+			db.store(usrNuevo); //Si no falla almacena
+			registrarEquivalenciaId(usrNuevo);
+		}
+		catch (DatosException e) {
+			throw new DatosException("Alta: " + usrNuevo.getIdUsr() + " ya existe y es " + usrPrevio.getIdUsr());
+		}
 	}
 
+	/**
+	 *  Si hay coincidencia de identificador hace 23 intentos de variar la última letra
+	 *  procedente del NIF. Llama al generarVarianteIdUsr() de la clase Usuario.
+	 * @param usrNuevo
+	 * @param usrPrevio
+	 * @throws DatosException
+	 */
+	private void generarVarianteIdUsr(Usuario usrNuevo, Usuario usrPrevio) throws DatosException {
+		// Comprueba que no haya coincidencia de Correo y Nif (ya existe)
+		boolean condicion = !(usrNuevo.getCorreo().equals(usrPrevio.getCorreo())
+				|| usrNuevo.getNif().equals(usrPrevio.getNif()));
+		if (condicion) {
+			int intentos = "TRWAGMYFPDXBNJZSQVHLCKE".length();				// 24 letras
+			do {
+				try {
+					usrNuevo.generarVarianteIdUsr();
+					usrPrevio = obtener(usrNuevo.getIdUsr());
+				}
+				catch (DatosException e){
+					return;
+				}
+				intentos--;
+			} while (intentos > 0);
+			throw new DatosException("Variar idUsr: " + usrNuevo.getIdUsr() + " imposible generar variante.");
+		}
+	}
+
+
+	/**
+	 *  Añade nif y correo como equivalencias de idUsr para el inicio de sesión. 
+	 *	@param usr - Usuario a registrar equivalencias. 
+	 */
+	private void registrarEquivalenciaId(Usuario usr) {
+		//obtiene mapa
+		Map<String,String> mapaEquivalencias = obtenerMapaEquivalencias();
+		//Registrar
+
+		mapaEquivalencias.put(usr.getIdUsr(), usr.getIdUsr());
+		mapaEquivalencias.put(usr.getNif().getTexto(), usr.getIdUsr());
+		mapaEquivalencias.put(usr.getCorreo().getTexto(), usr.getIdUsr());
+
+		db.store(mapaEquivalencias);
+	}
+
+	/**
+	 * Elimina el objeto, dado el id utilizado para el almacenamiento.
+	 * @param idUsr - el identificador del objeto a eliminar.
+	 * @return - el Objeto eliminado. 
+	 * @throws DatosException - si no existe.
+	 */
 	@Override
-	public Object baja(String id) throws DatosException {
-		// TODO Auto-generated method stub
-		return null;
+	public Usuario baja(String id) throws DatosException {
+		assert (id != null);
+		assert (id !="");
+		assert (id != " ");
+		try {
+			Usuario usr = obtener(id);
+			borrarEquivalenciaId(usr);
+			db.delete(usr);
+			return usr;
+		}
+		catch (DatosException e) {
+			throw new DatosException("Baja: "+ id + " no existe"); 
+		}
+	} 
+
+	/**
+	 *  Elimina nif y correo como equivalencias de idUsr. 
+	 *	@param usr - Usuario a eliminar equivalencias. 
+	 */
+	private void borrarEquivalenciaId(Usuario usr) {
+		//obtiene mapa
+		Map<String,String> mapaEquivalencias = obtenerMapaEquivalencias();
+		//Registrar
+		mapaEquivalencias.remove(usr.getIdUsr());
+		mapaEquivalencias.remove(usr.getNif().getTexto());
+		mapaEquivalencias.remove(usr.getCorreo().getTexto());
+		db.store(mapaEquivalencias);
 	}
 
+	/**
+	 *  Actualiza datos de un Usuario reemplazando el almacenado por el recibido. 
+	 *  No admitirá cambios en el idUsr.
+	 *	@param obj - Usuario con los cambios.
+	 * @throws DatosException - si no existe.
+	 */
 	@Override
 	public void actualizar(Object obj) throws DatosException {
-		// TODO Auto-generated method stub
-
+		assert obj != null;
+		Usuario usrActualizado = (Usuario) obj;							// Para conversión cast
+		Usuario usrPrevio = null;
+		try {
+			usrPrevio = (Usuario) obtener (usrActualizado.getIdUsr());
+			cambiarEquivalenciaId(usrPrevio,usrActualizado);
+			usrPrevio.setNif(usrActualizado.getNif());
+			usrPrevio.setNombre(usrActualizado.getNombre());
+			usrPrevio.setApellidos(usrActualizado.getApellidos());
+			usrPrevio.setDomicilio(usrActualizado.getDomicilio());
+			usrPrevio.setCorreo(usrActualizado.getCorreo());
+			usrPrevio.setFechaNacimiento(usrActualizado.getFechaNacimiento());
+			usrPrevio.setFechaAlta(usrActualizado.getFechaAlta());
+			usrPrevio.setRol(usrActualizado.getRol());
+			db.store(usrPrevio);
+		}
+		catch(DatosException e) {
+			throw new DatosException("actualizar: "+ usrActualizado.getIdUsr() + " no existe");
+		}
+		catch (ModeloException e) {
+			e.printStackTrace();
+		}
 	}
 
+	/**
+	 *  Modifica o reemplaza nif y correo como equivalencias de idUsr. 
+	 *	@param usrAntiguo - Usuario a modificar equivalencias. 
+	 *	@param usrNuevo   - Usuario del que se extraen el valor de las modificaciones
+	 */
+	private void cambiarEquivalenciaId(Usuario usrAntiguo, Usuario usrNuevo) {
+		//obtiene mapa
+		Map<String,String> mapaEquivalencias = obtenerMapaEquivalencias();
+		//cambiar
+
+		mapaEquivalencias.replace(usrAntiguo.getIdUsr(), usrNuevo.getIdUsr().toUpperCase());
+		mapaEquivalencias.replace(usrAntiguo.getNif().getTexto(), usrNuevo.getIdUsr().toUpperCase());
+		mapaEquivalencias.replace(usrAntiguo.getCorreo().getTexto(), usrNuevo.getIdUsr().toUpperCase());
+		//actualiza
+		db.store(mapaEquivalencias);
+	}
+
+	/**
+	 * Obtiene el listado de todos los usuarios almacenados.
+	 * @return el texto con el volcado de datos.
+	 */
 	@Override
 	public String listarDatos() {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder listado = new StringBuilder();
+		for (Usuario usuario : obtenerTodos()) {
+			listado.append("\n" + usuario);
+		}
+		return listado.toString();
 	}
 
+	/**
+	 * Obtiene listado de los usuarios almacendos
+	 * @return los usuarios almacenados como lista de objetos
+	 */
+	public List <Usuario> obtenerTodos() {
+		Query consulta=db.query();
+		consulta.constrain(Usuario.class);
+		return consulta.execute();
+	}
+
+	/**
+	 * Elimina todos los usuarios almacenados y regenera los predeterminados.
+	 */
 	@Override
 	public void borrarTodo() {
-		// TODO Auto-generated method stub
-
+		//Elimina cada uso
+		for (Usuario usr:obtenerTodos()) {
+			db.delete(usr);
+		}
+		//Quita todas las equivalencias
+		Map<String,String> mapaEquivalencias=obtenerMapaEquivalencias();
+		mapaEquivalencias.clear();
+		db.store(mapaEquivalencias);
+		cargarPredeterminados();
 	}
 
+	/**
+	 *  Cierra almacenes de datos.
+	 */
 	@Override
 	public void cerrar() {
-		// TODO Auto-generated method stub
-
+		db.close();
 	}
 
 } // class

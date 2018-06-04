@@ -97,12 +97,19 @@ public class SimulacionesDAO implements OperacionesDAO{
 		}
 
 
+		/** 
+         * Búsqueda de simulacion dado un objeto, reenvía al método que utiliza idSimulacion.
+         * @param obj - la Simulacion a buscar.
+         * @return - la Simulacion encontrada.
+         * @throws DatosException - si no existe.
+         * @author GRUPO 1 - Víctor Martínez Martínez
+         */
 
 		@Override
-		public Object obtener(Object obj) throws DatosException {
-			// TODO Auto-generated method stub
-			return null;
+		public Simulacion obtener(Object obj) throws DatosException {
+			return this.obtener(((Simulacion) obj).getIdSimulacion());
 		}
+
 
 		/**
          *  Recibe un argumento que representa la nueva simulación
@@ -134,11 +141,28 @@ public class SimulacionesDAO implements OperacionesDAO{
 		}
 
 
+		/**
+		 *  Actualiza datos de una Simulacion reemplazando el almacenado por el recibido.
+		 *	@param obj - Simulación actualizada recibida.
+		 *  @throws DatosException - si la simulación recibida no existe o no concuerda su id.
+		 *  @author GRUPO 1 DAM - Juan Antonio Espinosa Gálvez.
+		 */
 		@Override
 		public void actualizar(Object obj) throws DatosException {
-			// TODO Auto-generated method stub
-			
+			Simulacion simActualizada = (Simulacion) obj;
+			Simulacion simPrevia = null;
+			try {
+				simPrevia = (Simulacion) obtener(simActualizada.getIdSimulacion());
+				simPrevia.setEstado(simActualizada.getEstado());
+				simPrevia.setFecha(simActualizada.getFecha());
+				simPrevia.setMundo(simActualizada.getMundo());
+				simPrevia.setUsr(simActualizada.getUsr());
+				db.store(simPrevia);
+			} catch (DatosException e) {
+				throw new DatosException("Actualizar: " + simActualizada.getIdSimulacion() + "no existe");
+			}
 		}
+
 		/**
          * Obtiene el listado de todas las simulaciones almacenadas.
          * @return el texto con el volcado de datos.
@@ -154,27 +178,42 @@ public class SimulacionesDAO implements OperacionesDAO{
 			return listado.toString();
 		}
 
+		/**
+         * Elimina todas las simulaciones almacenadas y 
+         * regenera los predeterminados.
+         * @author GRUPO 1 - Víctor Martínez Martínez
+         */
 
 		@Override
-		public void borrarTodo() {
-			// TODO Auto-generated method stub
-			
-		}
+        public void borrarTodo() {
+            // Elimina cada uno de los obtenidos
+            for (Simulacion sim: obtenerTodasSimulacion()) {
+                db.delete(sim);
+            }
+            // Regenera predeterminados
+            cargarPredeterminados();
+        }
 
-
+		/**
+		 * Metodo para cerrar la conexion con la base de datos
+		 * @author DAM GRUPO 1 - Francisco Jurado Abad
+		 */
 		@Override
 		public void cerrar() {
-			// TODO Auto-generated method stub
-			
+			// No es necesaria
+			db.close();
 		}
 		
 		/**
-		 * Obtiene todos las simulaciones almacenadas.
-		 * @return - la List con todas las simulaciones.
-		 * @author GRUPO 1 DAM
-		 */
-		public List <Simulacion> obtenerTodasSimulacion() {
-			return null;
-		}
+         * Obtiene todos las simulaciones almacenadas.
+         * @return - la List con todas las simulaciones.
+         * @author GRUPO 1 DAM - Juan Carlos Peña Fernández
+         */
+        public List <Simulacion> obtenerTodasSimulacion() {
+            Query consulta = db.query();
+            consulta.constrain(Simulacion.class);
+            return consulta.execute();
+        }
+
 
 }		
