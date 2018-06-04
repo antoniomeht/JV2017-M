@@ -84,7 +84,14 @@ public class SesionesDAO implements OperacionesDAO {
 	public Object obtener(Object obj) throws DatosException {
 		return this.obtener(((SesionUsuario) obj).getIdSesion());
 	}
-
+	
+	/**
+	 * Alta de una nueva SesionUsuario en orden y sin repeticiones según IdUsr + fecha. 
+	 * Busca previamente la posición que le corresponde por búsqueda binaria.
+	 * @param obj - la SesionUsuario a almacenar.
+	 * @throws DatosException - si ya existe.
+	 * @author Grupo 3 - Marcos Martínez
+	 */
 	@Override
 	public void alta(Object obj) throws DatosException {
 		SesionUsuario sesionNueva = (SesionUsuario) obj;
@@ -100,7 +107,14 @@ public class SesionesDAO implements OperacionesDAO {
         throw new DatosException("Simulacion: " + sesionPrevia + "ya existente");
 		
 	}
-
+	
+	/**
+	 * Elimina el objeto, dado el id utilizado para el almacenamiento.
+	 * @param idSesion - identificador de la SesionUsuario a eliminar.
+	 * @return - la SesionUsuario eliminada.
+	 * @throws DatosException - si no existe.
+	 * @author Grupo 3 - Marcos Martínez
+	 */
 	@Override
 	public Object baja(String idSesion) throws DatosException {
 		assert idSesion != null;
@@ -162,11 +176,11 @@ public class SesionesDAO implements OperacionesDAO {
 	@Override
     public void borrarTodo() {
         // Elimina cada uno de los obtenidos
-        
+		for (SesionUsuario sim: obtenerTodasSesiones()) {
+            db.delete(sim);
+        }
      	}
         
-    
-	
 	/**
 	 *  Cierra almacenes de datos.
 	 */
