@@ -129,6 +129,10 @@ public class UsuariosDAOTest {
 			
 		}
 	}
+	/**
+	 * testBajaUsuario(), comprueba que se da de baja correctamente el usuario
+	 * @author Alvaro Martinez Martinez
+	 */
 
 	@Test
 	public void testBajaUsuario() {
@@ -139,11 +143,25 @@ public class UsuariosDAOTest {
 		catch(DatosException e){
 		}
 	}
+	/**
+	 * testActualizarUsuario(), comprueba que se actualiza correctamente el usuario
+	 * @author Carlos Carrión Martínez
+	 */
 
 	@Test
 	public void testActualizarUsuario() {
-		fail("No implenetado");
+		Usuario nuevoUsr = null;
+		try {
+			nuevoUsr = new Usuario(usuarioPrueba);
+			fachada.actualizarUsuario(usuarioPrueba);
+			assertEquals(fachada.obtenerUsuario(usuarioPrueba), nuevoUsr);
+		}
+		catch(DatosException e) {
+			
+		}
 	}
+	
+	
 
 	@Test
 	public void testToStringDatosUsuarios() {
