@@ -133,11 +133,26 @@ public class SimulacionesDAO implements OperacionesDAO{
             throw new DatosException("Simulacion: " + simPrevia + "ya existente");
         }
 
-
+        /**
+        * Recibe un argumento que representa el id del usuario y la fecha de la simulación que se quiere borrar.
+        * @param id - el identificador del objeto a eliminar.
+        * @return - el Objeto eliminado.
+        * @throws DatosException - si no existe.
+        * @author GRUPO 1 DAM - Manuel Castillo Jiménez
+         */
+        
 		@Override
-		public Object baja(String id) throws DatosException {
-			// TODO Auto-generated method stub
-			return null;
+		public Object baja(String idSim) throws DatosException {
+			assert idSim != null;
+			
+			try {
+				Simulacion simActual = obtener(idSim);
+				db.delete(simActual);
+				return simActual;
+			}
+			catch (DatosException e) {
+				throw new DatosException("Simulacion: " + idSim + "no existe, o no se puede borrar");
+			}
 		}
 
 
