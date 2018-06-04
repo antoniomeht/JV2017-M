@@ -160,22 +160,12 @@ public class UsuariosDAOTest {
 			
 		}
 	}
-	/**
-	 * testToStringDatosUsuario(), test basico inicial
-	 * @author Carlos Carrión Martínez
-	 */
+	
 	
 
 	@Test
 	public void testToStringDatosUsuarios() {
-		try {
-			assertSame(fachada.obtenerUsuario(usuarioPrueba), usuarioPrueba);
-			
-		}
-		catch (DatosException e){
-			
-		}
-		
+		assertNotNull(fachada.toStringDatosUsuarios());
 	}
 
 	
