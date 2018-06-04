@@ -199,6 +199,24 @@ public class PatronesDAO implements OperacionesDAO {
 		return listado.toString();
 	}
 
+	/**
+	 * Obtiene todos los Identificadores de los patrones almacenados.
+	 * @return El texto con los datos.
+	 */
+	public String listarId() {
+		StringBuilder listado = new StringBuilder();
+		ObjectSet<Patron> result;
+		Query consulta = db.query();
+		consulta.constrain(Patron.class);
+		result = consulta.execute();
+		for(Patron patron:result) {
+			if(patron != null) {
+				listado.append(patron.getNombre() + "\n");
+			}
+		}
+		return listado.toString();
+	}
+	
 	@Override
 	public void borrarTodo() {
 		// TODO Auto-generated method stub
