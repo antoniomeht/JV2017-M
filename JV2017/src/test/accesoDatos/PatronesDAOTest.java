@@ -24,7 +24,6 @@ import accesoDatos.Datos;
 import accesoDatos.DatosException;
 import modelo.ModeloException;
 import modelo.Patron;
-import modelo.Usuario;
 
 public class PatronesDAOTest {
 
