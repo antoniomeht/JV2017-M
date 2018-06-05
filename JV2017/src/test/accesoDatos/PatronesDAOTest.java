@@ -24,6 +24,7 @@ import accesoDatos.Datos;
 import accesoDatos.DatosException;
 import modelo.ModeloException;
 import modelo.Patron;
+import modelo.Usuario;
 
 public class PatronesDAOTest {
 
@@ -103,9 +104,21 @@ public class PatronesDAOTest {
 		fail("No implenetado");
 	}
 
+	/**
+	 *  Método testActualizarPatron() actualiza un patron y lo comprueba
+	 *  @author GRUPO 2 DAM Antonio Araez Moreno
+	 */
 	@Test
 	public void testActualizarPatron() {
-		fail("No implenetado");
+		Patron nuevoPatron = null;
+		try {
+			nuevoPatron = new Patron(patronPrueba);
+			fachada.actualizarPatron(nuevoPatron);
+			assertEquals(fachada.obtenerPatron(patronPrueba), nuevoPatron);
+		}
+		catch(DatosException e) {
+			
+		}
 	}
 
 	@Test
